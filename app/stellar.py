@@ -53,10 +53,10 @@ def score_account(address: str, settings: Settings | None = None) -> dict:
     for op in records:
         try:
             created = datetime.fromisoformat(op["created_at"].replace("Z", "+00:00"))
-        except (KeyError, ValueError):
+            if created >= window_start:
+                recent.append(op)
+        except (KeyError, TypeError, ValueError):
             continue
-        if created >= window_start:
-            recent.append(op)
 
     counterparties: set[str] = set()
     volume = 0.0
